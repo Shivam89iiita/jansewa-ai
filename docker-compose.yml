@@ -1,13 +1,15 @@
+version: '3.8'
+
 services:
   backend:
     build: ./backend
     ports:
       - "8000:8000"
     env_file:
-      - ./backend/.env
+      - .env
     environment:
-      DATABASE_URL: postgresql+asyncpg://jansewa:jansewa_secret@postgres:5432/jansewa_db
-      DATABASE_SYNC_URL: postgresql://jansewa:jansewa_secret@postgres:5432/jansewa_db
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      DATABASE_SYNC_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
       REDIS_URL: redis://redis:6379/0
     depends_on:
       postgres:
@@ -27,25 +29,32 @@ services:
   postgres:
     image: postgres:15-alpine
     environment:
-      POSTGRES_USER: jansewa
-      POSTGRES_PASSWORD: jansewa_secret
-      POSTGRES_DB: jansewa_db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    # Bound to localhost only so external internet cannot access raw DB
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./backend/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U jansewa -d jansewa_db"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 5
+    restart: unless-stopped
 
   redis:
     image: redis:7-alpine
+    command: redis-server --appendonly yes
+    # Bound to localhost only
     ports:
-      - "6379:6379"
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - redisdata:/data
     restart: unless-stopped
 
 volumes:
   pgdata:
+  redisdata:
