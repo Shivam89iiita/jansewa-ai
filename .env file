@@ -1,0 +1,42 @@
+# Database Configuration
+POSTGRES_USER=jansewa
+POSTGRES_PASSWORD=your_secure_postgres_password_here
+POSTGRES_DB=jansewa_db
+
+DATABASE_URL=postgresql+asyncpg://jansewa:your_secure_postgres_password_here@postgres:5432/jansewa_db
+DATABASE_SYNC_URL=postgresql://jansewa:your_secure_postgres_password_here@postgres:5432/jansewa_db
+REDIS_URL=redis://redis:6379/0
+
+# Security & Auth
+JWT_SECRET=change_this_to_a_random_32_character_string
+JWT_ALGORITHM=HS256
+JWT_EXPIRE_MINUTES=1440
+
+# AI Services (Optional - KB handles offline fallbacks)
+GEMINI_API_KEY=
+OPENAI_API_KEY=
+
+# WhatsApp & Twilio Integrations
+WHATSAPP_PHONE_NUMBER_ID=
+WHATSAPP_ACCESS_TOKEN=
+WHATSAPP_VERIFY_TOKEN=jansewa_webhook_verify_token_123
+
+TWILIO_ACCOUNT_SID=
+TWILIO_AUTH_TOKEN=
+TWILIO_SMS_FROM=
+TWILIO_WHATSAPP_FROM=
+
+# External Services
+TWITTER_BEARER_TOKEN=
+GOOGLE_MAPS_API_KEY=
+CLOUDINARY_URL=
+
+# Email Notifications
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USERNAME=
+SMTP_PASSWORD=
+SMTP_FROM_EMAIL=noreply@jansewa.gov
+
+# Frontend API URL
+VITE_API_URL=http://localhost:8000/api
